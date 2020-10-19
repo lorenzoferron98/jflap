@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>Regular Expression to Automaton</title>
+</head>
+
+<body>
+
+<H1>Regular Expression to Automaton</H1>
+
+<P>When the converter starts up, all that appears initially are two states (one initial and one final) with a
+    transition. The transition between them contains the regular expression that we are trying to convert.</P>
+
+<P>The critical idea of the converter is that at each stage of the conversion one has a valid machine where some
+    transitions may happen to be regular expressions. Each regular expression may be recursively broken into smaller
+    parts. The conversion is finished when the only transitions have only single (or zero) alphabet symbols on them.</P>
+
+<P>There are four types of reductions that can be done on a regular expression:</P>
+
+<ol>
+    <li><P><IMG ALIGN="bottom" ALT="Shown, a+bc+d de-ored." HEIGHT="81" SRC="images/re2nfa_or.gif" WIDTH="281">
+        Transitions are first broken according to the <DFN>or</DFN> symbol (+). For example, the expression
+        <VAR>a+bc+d</VAR> can be broken into three subexpressions <VAR>a</VAR>, <VAR>bc</VAR> and <VAR>d</VAR>. An
+        example of such a breakup is shown above.</P>
+
+    <li>
+        <P><IMG ALIGN="bottom" ALT="Shown, a(b+d)c* de-anded." HEIGHT="81" SRC="images/re2nfa_and.gif" WIDTH="281">
+            Transitions that cannot be broken across
+            <DNF>or</DNF>
+            s are then broken across concatenations. For example, <VAR>a(b+d)c*</VAR> would be broken into the three
+            subexpressions <VAR>a</VAR>, <VAR>(b+d)</VAR>, <VAR>c*</VAR> as shown above.
+        </P>
+
+    <li>
+        <P><IMG ALIGN="bottom" ALT="Shown, a(b+d)c* de-stared." HEIGHT="55" SRC="images/re2nfa_star.gif" WIDTH="281"> If
+            the transition does not break across either concatenation or
+            <DNF>or</DNF>
+            , then it may be a Kleene star (*) term, of the form <VAR>a*</VAR> or <VAR>(b+cd)*</VAR> (shown above) or
+            something in that vein. In this case, the user effects the removal of the Klein star.
+        </P>
+
+    <li><P>Lastly, if a regular expression is of the form <VAR>(...)</VAR>, then the parentheses are simply removed from
+        the transition.</P>
+</ol>
+
+The user interacts with the system in this way:
+
+<ol>
+    <li>In the first stage of the breakup, one uses the "de-expressionify" tool (<img align="top"
+                                                                                      alt="De-expressionify tool icon"
+                                                                                      height="16"
+                                                                                      src="../ICON/de-expressionify.gif"
+                                                                                      width="16">) to select a
+        transition with a regular expression that can be broken down. If a particular transition cannot be broken down
+        further, the user is gently chastised.
+    </li>
+    <li>If this is a reduction that requires additional lambda transitions, the user may add them with the transition
+        tool (<img align="top" alt="Transition tool icon" height="16" src="../ICON/transition.gif" width="16">). A small
+        message in the upper portion of the window will report how many transitions remain to add. If the user makes an
+        error in the process of adding the transitions, the user will immediately receive a message to that effect. When
+        all required transitions are added, the reduction is considered complete.
+    <li>Steps 1 and 2 are repeated until there are no more transitions that can be "de-expressionified."
+</ol>
+
+<P>At any time, the user may press "Do Step" to complete the current RE reduction; if no RE reduction is in progress,
+    this will choose a transition that remains to be reduced, and reduce it. "Do All" will complete the building of the
+    automaton.</P>
+
+<P>When the automaton is fully built, as with similar conversion operations the user has the option of placing the NFA
+    in its own window with the "Export" button.</P>
+
+</body>
+</html>
